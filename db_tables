@@ -1,0 +1,40 @@
+CREATE TABLE parties (
+    id serial PRIMARY KEY,
+    user_id INT,
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(1000) NOT NULL,
+    address VARCHAR(1000) NOT NULL,
+    category VARCHAR(2000),
+    party_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    description VARCHAR(2000),
+    price FLOAT,
+    rating FLOAT,
+    is_active BOOLEAN DEFAULT true,
+    latitude FLOAT,
+    longitude FLOAT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE bookmarks (
+    id serial PRIMARY KEY,
+    user_id INT,
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+    party_id INT,
+    CONSTRAINT fk_party FOREIGN KEY(party_id) REFERENCES parties(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+
+
+CREATE TABLE users (
+  id serial PRIMARY KEY,
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+	username VARCHAR (50) UNIQUE NOT NULL,
+	password VARCHAR (1000) NOT NULL,
+	email VARCHAR (255) UNIQUE NOT NULL,
+  is_producer boolean DEFAULT true,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+)
