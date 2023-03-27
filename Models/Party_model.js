@@ -5,7 +5,7 @@ const { DataTypes } = Sequelize;
 
 const Party = db.define('parties', {
   user_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
   },
   name: {
     type: DataTypes.STRING

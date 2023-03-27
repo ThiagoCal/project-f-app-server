@@ -27,6 +27,9 @@ const User = db.define('users', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  refresh_token:{
+    type: DataTypes.STRING
+  },
   created_at: {
     type: DataTypes.DATE,
     defaultValue: Sequelize.fn("NOW"),
