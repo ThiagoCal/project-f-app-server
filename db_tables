@@ -79,10 +79,10 @@ CREATE TABLE bookmarks (
 )
 
 
-CREATE TABLE music_categories (
-    music_id SERIAL PRIMARY KEY,
-    category_name VARCHAR(255)
+CREATE TABLE party_categories (
+    category_id SERIAL PRIMAum0me VARCHAR(255) 
 );
+
 
 INSERT INTO party_categories (category_name) VALUES
     ('DJ night'),
@@ -90,5 +90,44 @@ INSERT INTO party_categories (category_name) VALUES
     ('Dance party'),
     ('Themed party'),
     ('VIP party'),
-('Club anniversary'),
+    ('Club anniversary'),
     ('Fundraising event');
+
+CREATE TABLE party_type_categories (
+    id serial PRIMARY KEY,
+    party_id uuid,
+    CONSTRAINT fk_party FOREIGN KEY(party_id) REFERENCES parties(id),
+    category_id INT,
+    CONSTRAINT fk_party_category FOREIGN KEY(category_id ) REFERENCES party_categories(category_id),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+
+CREATE TABLE music_categories (
+    music_id SERIAL PRIMARY KEY,
+    category_name VARCHAR(255)
+);
+
+INSERT INTO music_categories(category_name) VALUES
+    ('Pop'),
+    ('Hip-Hop/Rap'),
+    ('R&B/Soul'),
+    ('Electronic/Dance'),
+    ('Rock/Alternative'),
+    ('Latin/Salsa'),
+    ('Reggaeton'),
+    ('Jazz/Blues');
+
+CREATE TABLE party_music_categories (
+    id serial PRIMARY KEY,
+    party_id uuid,
+    CONSTRAINT fk_party FOREIGN KEY(party_id) REFERENCES parties(id),
+    music_id INT,
+    CONSTRAINT fk_party_category FOREIGN KEY(music_id ) REFERENCES music_categories(music_id),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+)
+
+
+
+
