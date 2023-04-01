@@ -3,7 +3,7 @@ import db from '../Config/db.js';
 const { DataTypes } = Sequelize;
 
 
-const Party = db.define('parties', {
+export const Party = db.define('parties', {
   user_id: {
     type: DataTypes.UUID,
   },
@@ -11,6 +11,15 @@ const Party = db.define('parties', {
     type: DataTypes.STRING
   },
   address: {
+    type: DataTypes.STRING
+  },
+  address_name: {
+    type: DataTypes.STRING
+  },
+  address_number: {
+    type: DataTypes.INTEGER
+  },
+  city: {
     type: DataTypes.STRING
   },
   category: {
@@ -34,15 +43,15 @@ const Party = db.define('parties', {
   party_date: {
     type: DataTypes.DATE,
   },
+  categoryid:{
+    type: DataTypes.ARRAY(DataTypes.STRING),
+  },
+  musicid:{
+    type: DataTypes.ARRAY(DataTypes.STRING),
+  },
   is_active: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
-  },
-  categoryId: {
-    type: DataTypes.INTEGER
-  },
-  musicId: {
-    type: DataTypes.INTEGER
   },
   created_at: {
     type: DataTypes.DATE,
@@ -54,7 +63,7 @@ const Party = db.define('parties', {
   }
 });
 
-const Category = db.define('party_categories', {
+export const Category = db.define('party_categories', {
   category_id : {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -65,7 +74,29 @@ const Category = db.define('party_categories', {
   }
 })
 
-const Music = db.define('music_categories', {
+export const PartyTypeCategory = db.define('party_type_categories', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  party_id: {
+    type: DataTypes.UUID,
+  },
+  category_id: {
+    type: DataTypes.INTEGER,
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW,
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW,
+  },
+});
+
+export const Music = db.define('music_categories', {
   music_id : {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -76,25 +107,38 @@ const Music = db.define('music_categories', {
   }
 })
 
+export const PartyMusicCategory = db.define('party_music_categories', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  party_id: {
+    type: DataTypes.UUID,
+  },
+  music_id: {
+    type: DataTypes.INTEGER,
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW,
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    defaultValue: Sequelize.NOW,
+  },
+});
+
 Party.associate = (models) => {
   Party.belongsTo(models.User,
     { foreignKey: 'user_id', as: 'user' });
 };
 
-// Party.belongsTo(Category, { foreignKey: 'categoryId', targetKey: 'category_id', as: 'category_type' });
+// Party.belongsToMany(Music,{ through: PartyMusicCategory});
+// Music.belongsToMany(Party, {through: PartyMusicCategory});
 
-// Party.belongsTo(Music, { foreignKey: 'musicId', targetKey: 'music_id', as: 'music_type' });
+// Party.belongsToMany(Category,{ through: PartyTypeCategory});
+// Category.belongsToMany(Party, {through: PartyTypeCategory});
 
 
-
-// db.Party.findAll({
-//   raw: true,
-//   attributes: attributes,
-//   include: [{
-//     model: db.Music,
-//     required: true,
-//     attributes: ['category_name']
-//   }],
-//   order: [['id', 'ASC']],
-// }).then(Party => console.table(Party))
-export default Party;
+// export default Party;

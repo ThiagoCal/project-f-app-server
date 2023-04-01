@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from '../Config/db.js';
-import Party from "./Party_model.js";
+import {Party} from "./Party_model.js";
 const { DataTypes } = Sequelize;
 
 const User = db.define('users', {

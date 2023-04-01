@@ -2,7 +2,31 @@ import User from "../models/User_model.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import validator from "validator";
+import passport from 'passport'
+import cookieParser from 'cookie-parser';
+import { Strategy as JwtStrategy, Strategy } from 'passport-jwt';
+
+const accessTokenExpirationTime = '1h';
+const refreshTokenExpirationTime = 2 * 24 * 60 * 60; // 2 days in seconds
 // import sendEmail from '../utils/email/sendEmail.js';
+const cookieExtractor = function(req) {
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies['refreshToken'];
+  }
+  return token;
+};
+
+const jwtOptions = {
+  jwtFromRequest: cookieExtractor,
+  secretOrKey: process.env.SECRETKEY,
+  algorithms: ['HS256'],
+};
+
+passport.use(new Strategy(jwtOptions, function(payload, done) {
+  console.log('JWT payload:', payload);
+  return done(null, payload);
+}));
 
 export const register = async(req, res) =>{
   console.log(req.body)
@@ -57,16 +81,9 @@ export const login = async(req,res) =>{
     const userid = user[0].id;
     const email = user[0].email;
     const accessToken = jwt.sign({userid, email}, process.env.ACCESS_TOKEN, { expiresIn:'300s'})
-    
-    User.update({refresh_token: accessToken},{
-      where:{
-          id: userid
-      }
-    })
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      maxAge: 300 * 1000
-    })
+    const refreshToken = jwt.sign({ email: user.email }, process.env.SECRETKEY, { expiresIn: refreshTokenExpirationTime });
+ 
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, domain:'http://localhost:3000', maxAge: refreshTokenExpirationTime * 1000 });
 
     res.json({accessToken})
 
@@ -76,8 +93,9 @@ export const login = async(req,res) =>{
   }
 }
 
-export const logout = async(req, res) =>{
- res.cookie('')
+export const logout = (req, res) =>{
+  res.clearCookie('refreshToken');
+  res.sendStatus(200);
 }
 // export const requestPasswordReset = async (email) => {
 //   const user = await User.findOne({ email });
