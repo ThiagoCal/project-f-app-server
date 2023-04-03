@@ -3,6 +3,8 @@ import db from '../Config/db.js';
 const { DataTypes } = Sequelize;
 
 
+// attributes:['id', 'user_id', 'name', 'address', 'price', 'categoryid', 'musicid', 'address_name', 'city', 'zipcode', 'description', 'latitude', 'longitude']
+
 const Party = db.define('parties', {
   user_id: {
     type: DataTypes.UUID,
@@ -11,6 +13,18 @@ const Party = db.define('parties', {
     type: DataTypes.STRING
   },
   address: {
+    type: DataTypes.STRING
+  },
+  address_name:{
+    type: DataTypes.STRING
+  },
+  address_number:{
+    type: DataTypes.STRING
+  },
+  zipcode:{
+    type: DataTypes.INTEGER
+  },
+  city:{
     type: DataTypes.STRING
   },
   category: {
@@ -38,11 +52,13 @@ const Party = db.define('parties', {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   },
-  categoryId: {
-    type: DataTypes.INTEGER
+  categoryid: {
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
+    defaultValue: [],
   },
-  musicId: {
-    type: DataTypes.INTEGER
+  musicid: {
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
+    defaultValue: [],
   },
   created_at: {
     type: DataTypes.DATE,

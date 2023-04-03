@@ -1,7 +1,7 @@
 import express from 'express'
 import {register, getUsers, login, updateUser, deleteUser} from "../Controllers/Users.js"
 import { RefreshToken, VerifyToken } from '../Middleware/VerifyToken.js';
-import { createParty, getParties, getUserParties, findParty, updateParty, deleteParty } from '../Controllers/Parties.js';
+import { createParty, getParties, getUserParties, findParty, updateParty, deleteParty, getSearchParties } from '../Controllers/Parties.js';
 
 import jwt from 'jsonwebtoken'
 import multer from 'multer';
@@ -35,5 +35,7 @@ router.get('/users/:userId/parties', getUserParties)
 router.get('/parties/:partyId', findParty)
 router.put('/parties/:id', updateParty)
 router.delete('/parties/:id', deleteParty)
+router.get('/parties_search', getSearchParties)
 
+// parties?name=Awesome&party_date=2023-04-05&city=New%20York&address=123%20Main%20St
 export default router
