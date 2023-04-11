@@ -45,7 +45,7 @@ export const createParty = async(req, res) =>{
     const partyCategory = await PartyTypeCategory.bulkCreate(bulkPCategories)
     const partyMusicCategory = await PartyMusicCategory.bulkCreate(bulkMCategories)
 
-    res.json({msg: 'Register Successful!', party: party, party_category: partyCategory, music_category: partyCategory })
+    res.json({msg: 'Register Successful!', party: party, party_category: partyCategory, music_category: partyMusicCategory })
   }catch(err){
     console.log(err)
     res.status(409).json({msg: 'Party already exists'})
