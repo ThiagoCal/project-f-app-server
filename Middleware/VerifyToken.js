@@ -54,7 +54,7 @@ export const verifyRefreshToken = (req, res, next) => {
         httpOnly: true,
         secure: true,
         domain: 'localhost',
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        // maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
       });
 
       next();

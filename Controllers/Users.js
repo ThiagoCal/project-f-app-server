@@ -30,7 +30,7 @@ passport.use(new Strategy(jwtOptions, function(payload, done) {
 
 export const register = async(req, res) =>{
   console.log(req.body)
-  const {email, password, first_name, last_name, username, is_producer, is_admin, created_at, updated_at} = req.body;
+  const {email, password, firstName, lastName, username, is_producer, is_admin, created_at, updated_at} = req.body;
   
   if (!email || !validator.isEmail(email)) {
     return res.status(400).json({ error: "Please provide a valid email address" });
@@ -38,15 +38,15 @@ export const register = async(req, res) =>{
   if (!password || password.length < 6) {
     return res.status(400).json({ error: "Password must be at least 6 characters long" });
   }
-  if (!first_name || !last_name || !username) {
+  if (!firstName|| !lastName || !username) {
     return res.status(400).json({ error: "Please provide all required fields" });
   }
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(password, salt);
   try {
     await User.create({
-      first_name,
-      last_name,
+      first_name: firstName,
+      last_name: lastName,
       username,
       email,
       password: hashPassword,
@@ -64,6 +64,7 @@ export const register = async(req, res) =>{
 
 
 export const login = async(req,res) =>{
+  console.log(req.body)
   try{
     const user = await User.findAll({
       where:{
@@ -75,9 +76,11 @@ export const login = async(req,res) =>{
     const userid = user[0].id;
     const email = user[0].email;
     const accessToken = jwt.sign({userid, email}, process.env.ACCESS_TOKEN, { expiresIn:'300s'})
-    const refreshToken = jwt.sign({ email: user.email }, process.env.SECRETKEY, { expiresIn: refreshTokenExpirationTime });
-
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, domain:'http://localhost:3000', maxAge: refreshTokenExpirationTime * 1000 });
+    const refreshToken = jwt.sign({ userid, email }, process.env.SECRETKEY, { expiresIn: refreshTokenExpirationTime });
+    console.log('accesstoken', accessToken)
+    console.log('refreshtoken', accessToken)
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: refreshTokenExpirationTime * 1000 });
+    console.log('req.cookies', req.cookies)
     res.json({accessToken})
   }catch(e){
   console.log(e)
@@ -87,8 +90,11 @@ export const login = async(req,res) =>{
 
 
 export const logout = (req, res) =>{
+  console.log('logout', req.cookies)
   res.clearCookie('refreshToken');
+  res.clearCookie('accessToken')
   res.sendStatus(200);
+  console.log('logout2', req.cookies)
 }
 
 

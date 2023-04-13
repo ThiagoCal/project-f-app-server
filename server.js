@@ -40,7 +40,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-app.post('/uploads', upload.single('image'), (req, res) => {
+app.post('/uploadimg', upload.single('image'), (req, res) => {
     try {
         const value = { ...req.body, filename: req.file.filename };
         console.log('value:', value);
