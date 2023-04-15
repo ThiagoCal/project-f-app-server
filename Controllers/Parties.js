@@ -9,6 +9,7 @@ import { Op } from "sequelize";
 import moment from "moment";
 import jwt from "jsonwebtoken";
 import validator from "validator";
+import db from "../Config/db.js";
 
 export const createParty = async (req, res) => {
   console.log("req.body", req.body);
@@ -20,6 +21,7 @@ export const createParty = async (req, res) => {
     name: req.body.partyName,
     venue: req.body.venue,
     user_id: req.body.user_id,
+    image_path: req.body.image_path,
     description: req.body.description,
     price: req.body.price,
     party_date: req.body.date,
@@ -76,6 +78,7 @@ export const getParties = async (req, res) => {
         "id",
         "user_id",
         "name",
+        "image_path",
         "venue",
         "address",
         "price",
@@ -107,6 +110,7 @@ export const getUserParties = async (req, res) => {
         "id",
         "user_id",
         "name",
+        "image_path",
         "venue",
         "address",
         "price",
@@ -131,10 +135,10 @@ export const getUserParties = async (req, res) => {
 };
 
 export const getSearchParties = async (req, res) => {
-  const { name, city, party_date, venue } = req.query;
+  const { name, city, party_date, venue, musicId, categoryId } = req.query;
   const startOfDay = moment.utc(party_date).startOf("day");
   const endOfDay = moment.utc(party_date).endOf("day");
-
+  console.log(req.query);
   const where = {};
 
   if (name) {
@@ -149,6 +153,19 @@ export const getSearchParties = async (req, res) => {
   if (venue) {
     where.venue = { [Op.iLike]: `%${venue}%` };
   }
+  if (categoryId) {
+    console.log("categoryid", categoryId);
+    const categoryIds = Array.isArray(categoryId)
+      ? categoryId.map(Number)
+      : [Number(categoryId)];
+    where.categoryid = { [Op.overlap]: categoryIds };
+  }
+  if (musicId) {
+    const musicIds = Array.isArray(musicId)
+      ? musicId.map(Number)
+      : [Number(musicId)];
+    where.categoryid = { [Op.overlap]: musicIds };
+  }
 
   try {
     const parties = await Party.findAll({
@@ -157,6 +174,7 @@ export const getSearchParties = async (req, res) => {
         "id",
         "user_id",
         "name",
+        "image_path",
         "venue",
         "address",
         "price",
@@ -201,6 +219,7 @@ export const updateParty = async (req, res) => {
     console.log("inside update", req.body);
     party.name = req.body.partyName;
     party.venue = req.body.venue;
+    party.venue = req.body.image_path;
     party.address = req.body.fullAddress;
     party.address_name = req.body.address;
     party.address_number = req.body.addressNumber;

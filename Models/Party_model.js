@@ -14,6 +14,9 @@ export const Party = db.define("parties", {
   venue: {
     type: DataTypes.STRING,
   },
+  image_path: {
+    type: DataTypes.STRING,
+  },
   address: {
     type: DataTypes.STRING,
   },
@@ -55,11 +58,11 @@ export const Party = db.define("parties", {
     defaultValue: true,
   },
   categoryid: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
     defaultValue: [],
   },
   musicid: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
+    type: DataTypes.ARRAY(DataTypes.INTEGER),
     defaultValue: [],
   },
   created_at: {
