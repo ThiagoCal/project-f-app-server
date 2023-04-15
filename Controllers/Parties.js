@@ -4,7 +4,7 @@ import {
   Party,
   PartyTypeCategory,
   PartyMusicCategory,
-} from "../models/Party_model.js";
+} from "../Models/Party_model.js";
 import { Op } from "sequelize";
 import moment from "moment";
 import jwt from "jsonwebtoken";
@@ -18,11 +18,12 @@ export const createParty = async (req, res) => {
 
   const partyReceived = {
     name: req.body.partyName,
+    venue: req.body.venue,
     user_id: req.body.user_id,
     description: req.body.description,
     price: req.body.price,
     party_date: req.body.date,
-    category: req.body.category,
+    // category: req.body.category,
     is_active: req.body.is_active,
     categoryid: selectedCategories,
     musicid: selectedMusicTypes,
@@ -75,6 +76,7 @@ export const getParties = async (req, res) => {
         "id",
         "user_id",
         "name",
+        "venue",
         "address",
         "price",
         "categoryid",
@@ -97,6 +99,7 @@ export const getParties = async (req, res) => {
 
 export const getUserParties = async (req, res) => {
   const userId = req.params.userId;
+  console.log(userId);
   try {
     const parties = await Party.findAll({
       where: { user_id: userId },
@@ -104,6 +107,7 @@ export const getUserParties = async (req, res) => {
         "id",
         "user_id",
         "name",
+        "venue",
         "address",
         "price",
         "categoryid",
@@ -127,7 +131,7 @@ export const getUserParties = async (req, res) => {
 };
 
 export const getSearchParties = async (req, res) => {
-  const { name, city, party_date, address } = req.query;
+  const { name, city, party_date, venue } = req.query;
   const startOfDay = moment.utc(party_date).startOf("day");
   const endOfDay = moment.utc(party_date).endOf("day");
 
@@ -142,8 +146,8 @@ export const getSearchParties = async (req, res) => {
   if (city) {
     where.city = { [Op.iLike]: `%${city}%` };
   }
-  if (address) {
-    where.address = { [Op.iLike]: `%${address}%` };
+  if (venue) {
+    where.venue = { [Op.iLike]: `%${venue}%` };
   }
 
   try {
@@ -153,6 +157,7 @@ export const getSearchParties = async (req, res) => {
         "id",
         "user_id",
         "name",
+        "venue",
         "address",
         "price",
         "categoryid",
@@ -195,6 +200,7 @@ export const updateParty = async (req, res) => {
     }
     console.log("inside update", req.body);
     party.name = req.body.partyName;
+    party.venue = req.body.venue;
     party.address = req.body.fullAddress;
     party.address_name = req.body.address;
     party.address_number = req.body.addressNumber;

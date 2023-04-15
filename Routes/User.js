@@ -107,7 +107,7 @@ router.delete("/users/:userId", deleteUser);
 
 router.post("/create_party", createParty);
 router.get("/parties", getParties);
-router.get("/users/:userId/parties", getUserParties);
+router.get("/:userId/parties", getUserParties);
 router.get("/parties/:partyId", findParty);
 router.put("/parties/:id", updateParty);
 router.delete("/parties/:id", deleteParty);
