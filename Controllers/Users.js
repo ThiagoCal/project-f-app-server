@@ -1,10 +1,10 @@
+import User from "../Models/User_model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import validator from "validator";
 import passport from "passport";
 import cookieParser from "cookie-parser";
 import { Strategy as JwtStrategy, Strategy } from "passport-jwt";
-import User from "../models/User_model.js";
 
 const accessTokenExpirationTime = "1h";
 const refreshTokenExpirationTime = 2 * 24 * 60 * 60; // 2 days in seconds

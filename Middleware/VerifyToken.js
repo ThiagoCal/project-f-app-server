@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User_model.js";
-import dotenv from 'dotenv';
-dotenv.config()
+import User from "../Models/User_model.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 // export const VerifyToken = (req, res, next) => {
 //   const accessToken = req.cookies.accessToken || req.headers['x-acces-token']
@@ -27,39 +27,39 @@ dotenv.config()
 // }
 
 export const verifyRefreshToken = (req, res, next) => {
-  const refreshToken = req.cookies['refreshToken'];
+  const refreshToken = req.cookies["refreshToken"];
   if (!refreshToken) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
   jwt.verify(refreshToken, process.env.SECRETKEY, async (err, payload) => {
     if (err) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: "Unauthorized" });
     }
     try {
       const user = await User.findById(payload.sub);
       if (!user) {
-        return res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: "Unauthorized" });
       }
 
       const accessToken = jwt.sign({ sub: user.id }, process.env.ACCESS_TOKEN, {
-        expiresIn: '15m',
+        expiresIn: "15m",
       });
 
       // Set the access token in the response headers
-      res.setHeader('Authorization', `Bearer ${accessToken}`);
+      res.setHeader("Authorization", `Bearer ${accessToken}`);
 
       // Set the refresh token cookie with the same options as before
-      res.cookie('refreshToken', refreshToken, {
+      res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: true,
-        domain: 'localhost',
+        domain: "localhost",
         // maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
       });
 
       next();
     } catch (err) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: "Unauthorized" });
     }
   });
 };
