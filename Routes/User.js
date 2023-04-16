@@ -1,4 +1,5 @@
 import express from "express";
+import User from "../Models/User_model.js";
 import {
   register,
   getUsers,
@@ -19,7 +20,6 @@ import {
   getCategories,
   getMusicTypes,
 } from "../Controllers/Parties.js";
-import User from "../models/User_model.js";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 import multer from "multer";
