@@ -149,26 +149,25 @@ export const findUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const userId = req.params.userId;
-  const { first_name, last_name, is_producer } = req.body;
+  console.log(userId);
+  const { first_name, last_name, is_producer, email } = req.body;
+  console.log(req.body);
   try {
     const user = await User.findOne({ where: { id: userId } });
     if (!user) {
       res.status(404).json({ msg: "Couldn't find user" });
     }
-    if (req.body.email) {
-      return res.status(400).json({ error: "Cannot update email" });
-    }
-    if (req.body.username) {
-      return res.status(400).json({ error: "Cannot update username" });
-    }
+    // if (req.body.email) {
+    //   return res.status(400).json({ error: "Cannot update email" });
+    // }
+    // if (req.body.username) {
+    //   return res.status(400).json({ error: "Cannot update username" });
+    // }
     user.first_name = req.body.first_name;
     user.last_name = req.body.last_name;
     user.is_producer = req.body.is_producer;
-    await user.update({
-      first_name,
-      last_name,
-      is_producer,
-    });
+    user.email = req.body.email;
+    await user.save();
     res.json(user);
   } catch (error) {
     res.status(500).json({ msg: "Server error - couldn't find user" });

@@ -21,7 +21,7 @@ export const createParty = async (req, res) => {
     name: req.body.partyName,
     venue: req.body.venue,
     user_id: req.body.user_id,
-    image_path: req.body.image_path,
+    image_path: req.body.fileName,
     description: req.body.description,
     price: req.body.price,
     party_date: req.body.date,
@@ -219,7 +219,7 @@ export const updateParty = async (req, res) => {
     console.log("inside update", req.body);
     party.name = req.body.partyName;
     party.venue = req.body.venue;
-    party.venue = req.body.image_path;
+    party.image_path = req.body.fileName;
     party.address = req.body.fullAddress;
     party.address_name = req.body.address;
     party.address_number = req.body.addressNumber;
