@@ -131,3 +131,36 @@ CREATE TABLE party_music_categories (
 
 
 
+SELECT con.*
+       FROM pg_catalog.pg_constraint con
+            INNER JOIN pg_catalog.pg_class rel
+                       ON rel.oid = con.conrelid
+            INNER JOIN pg_catalog.pg_namespace nsp
+                       ON nsp.oid = connamespace
+       WHERE nsp.nspname = 'postgres'
+             AND rel.relname = 'party_type_categories';
+
+
+alter table party_type_categories
+drop constraint fk_party,
+add constraint fk_party
+   foreign key (party_id)
+   references parties(id)
+   on delete cascade;            
+
+
+alter table party_music_categories
+drop constraint fk_party,
+add constraint fk_party
+   foreign key (party_id)
+   references parties(id)
+   on delete cascade;
+
+
+ SELECT conrelid::regclass AS table_from
+      , conname
+      , pg_get_constraintdef(oid)
+ FROM   pg_constraint
+ WHERE  contype IN ('f', 'p ')
+ AND    connamespace = 'public'::regnamespace  -- your schema here
+ ORDER  BY conrelid::regclass::text, contype DESC;

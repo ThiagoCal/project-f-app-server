@@ -83,17 +83,17 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   console.log(req.body);
   try {
-    const user = await User.findAll({
+    const user = await User.findOne({
       where: {
         email: req.body.email,
       },
     });
-    const match = await bcrypt.compare(req.body.password, user[0].password);
+    const match = await bcrypt.compare(req.body.password, user.password);
     if (!match) {
       return res.status(400).json({ msg: "Invalid password" });
     }
-    const userid = user[0].id;
-    const email = user[0].email;
+    const userid = user.id;
+    const email = user.email;
     const accessToken = jwt.sign({ userid, email }, process.env.ACCESS_TOKEN, {
       expiresIn: "300s",
     });
