@@ -52,15 +52,15 @@ router.get("/token", (req, res) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
     try {
-      const user = await User.findOne({ where: { id: payload.userid } });
+      const userres = await User.findOne({ where: { id: payload.userid } });
       const userData = {
-        id: user.dataValues.id,
-        first_name: user.dataValues.first_name,
-        last_name: user.dataValues.last_name,
-        email: user.dataValues.email,
-        username: user.dataValues.username,
-        is_admin: user.dataValues.is_admin,
-        is_producer: user.dataValues.is_producer,
+        id: userres.dataValues.id,
+        first_name: userres.dataValues.first_name,
+        last_name: userres.dataValues.last_name,
+        email: userres.dataValues.email,
+        username: userres.dataValues.username,
+        is_admin: userres.dataValues.is_admin,
+        is_producer: userres.dataValues.is_producer,
       };
       console.log("userdata", userData);
       // if (!user) {
