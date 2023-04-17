@@ -22,6 +22,12 @@ import {
   getMusicTypes,
 } from "../Controllers/Parties.js";
 
+import {
+  createBookmark,
+  getBookmarks,
+  deleteBookmark,
+} from "../Controllers/Bookmarks.js";
+
 import passport from "passport";
 import jwt from "jsonwebtoken";
 const router = express.Router();
@@ -95,5 +101,10 @@ router.get("/parties_search", getSearchParties);
 
 router.get("/party_categories_list", getCategories);
 router.get("/music_types", getMusicTypes);
+
+//-------------------Bookmarks -----------------------------
+router.post("/bookmarks", createBookmark);
+router.get("/bookmarks/:userId", getBookmarks);
+router.delete("/bookmark/:id", deleteBookmark);
 
 export default router;
