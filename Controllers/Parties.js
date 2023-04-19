@@ -216,6 +216,9 @@ export const updateParty = async (req, res) => {
     if (!party) {
       return res.status(404).json({ error: "Party not found" });
     }
+    if (req.body.price === "" || req.body.price === 0) {
+      party.price = 0.00001;
+    }
     console.log("inside update", req.body);
     party.name = req.body.partyName;
     party.venue = req.body.venue;
@@ -237,11 +240,19 @@ export const updateParty = async (req, res) => {
     party.party_date = req.body.party_date;
     party.is_active = req.body.is_active;
 
-    if (!party.name || !party.address || !party.price) {
-      return res
-        .status(400)
-        .json({ error: "Please provide all required fields" });
-    }
+    // if (!party.name || !party.address || !party.price) {
+    //   console.log(
+    //     "party name->",
+    //     party.name,
+    //     "party address->",
+    //     party.address,
+    //     "party address->",
+    //     party.price
+    //   );
+    //   return res
+    //     .status(400)
+    //     .json({ error: "Please provide all required fields" });
+    // }
 
     await party.save();
 
